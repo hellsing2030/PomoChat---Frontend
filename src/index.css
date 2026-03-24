@@ -1,6 +1,7 @@
 body{
   width: calc(100% - 2px);
-  height: calc(100vh - 2px) ;
+  height: 98.3vh;
+  max-height: 98.3vh;
   display: flex;
   flex-wrap: nowrap;
   padding: 0;

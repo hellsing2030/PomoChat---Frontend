@@ -23,6 +23,7 @@
     height: 100%;
     flex-wrap: wrap;
 }
+
 .container-overlay-top{ 
     background: rgb(36, 36, 36);
     width: 100%;
@@ -30,8 +31,56 @@
 }
 
 .cam-overlay {
-    width: max-content;
+    width: 100%;
     height: 98%;
+    position: relative;
+}
+
+.container-corner{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.corner {
+    position: absolute;
+    background: rgb(36, 36, 36);
+    width: 24px;
+    height: 24px;
+    z-index: 5;
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+    transform-origin: center;
+}
+
+.corner-1{
+    top:0;
+    left:0;
+}
+
+.corner-2{
+    top: 0;
+    right: 0;
+    transform: scaleX(-1);
+}
+
+.corner-3{
+    bottom: 0;
+    left: 0;
+    transform: scaleY(-1);
+}
+
+.corner-4{
+    bottom: 0;
+    right: 0;
+    transform: scale(-1, -1);
+}
+
+@supports (clip-path: path("M0 0 L24 0 Q6 6 0 24 Z")) {
+    .corner {
+        clip-path: path("M0 0 L24 0 Q6 6 0 24 Z");
+    }
 }
 
 .container-overlay-bottom {
