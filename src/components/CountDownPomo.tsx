@@ -16,6 +16,7 @@ export const CountDownPomo = () => {
     }
     
     const handlerPauseCount = () =>{
+      setGeneralRunTimer(false)
       setPausePomo(true)
     }
 

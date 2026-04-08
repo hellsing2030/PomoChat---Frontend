@@ -22,18 +22,21 @@ export const  useSetCountDown =({ seconds }:{seconds:number,})=>{
         setCountMsDown(msStartDate.current)
 
         const interval = setInterval(()=>{
+            if(pausePause && !run ) return 
+
             const keyCountDown = `CountDown-${msStartDate.current}`
             localStorage.setItem(keyCountDown, (msStartDate.current as number).toString())
             setKeyCountDownExternal(keyCountDown)
             setFinish(false)
+
             setCountMsDown((statePrev) => {
 
-                if(pausePause) {
-                    const savePause = {time: countMsDown - Number(localStorage.getItem(keyCountDownExternal)) + seconds }
+                if(pausePause && run ) {
+                    const savePause = {time: countMsDown - Number(localStorage.getItem(keyCountDownExternal)) + (seconds * 1000)}
                     localStorage.setItem(`${keyCountDownExternal}-pause`, JSON.stringify(savePause))
+                    localStorage.removeItem(keyCountDownExternal)
                     setKeyCountDownExternal(state => `${state}-pause`)
                     setRun(false)
-                    localStorage.removeItem(keyCountDownExternal)
                     clearInterval(interval)
                 }
                 
