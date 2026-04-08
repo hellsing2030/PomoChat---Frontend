@@ -1,17 +1,17 @@
-import { useEffect, useRef, useState } from "react"
+import {  useEffect, useRef, useState } from "react"
 import { formatMs } from "./formatMs"
 
-export const  useSetCountDown =({ seconds, }:{seconds:number,})=>{
+export const  useSetCountDown =({ seconds }:{seconds:number,})=>{
     const msStartDate = useRef<number | null>(null) 
     const msfinishCountDown = useRef<number | null>(null) 
-
-    const [countMsDown, setCountMsDown] = useState<number>(0)
-    const [run, setRun]= useState<boolean>(false) 
-    const [finish,setFinish]= useState<boolean>(false)
-    const [keyCountDownExternal,setKeyCountDownExternal]= useState<string>("")
-
+    const [ countMsDown, setCountMsDown] = useState<number>(0)
+    const [ run, setRun] = useState<boolean>(false) 
+    const [ finish, setFinish] = useState<boolean>(false)
+    const [ keyCountDownExternal, setKeyCountDownExternal] = useState<string>("")
+    const [ pausePause, setPausePomo ] = useState<boolean>(false)
+    
     useEffect(()=>{
-          if(!run){
+        if(!run && !pausePause){
             setKeyCountDownExternal("")
             localStorage.removeItem(keyCountDownExternal)
             return
@@ -26,26 +26,37 @@ export const  useSetCountDown =({ seconds, }:{seconds:number,})=>{
             localStorage.setItem(keyCountDown, (msStartDate.current as number).toString())
             setKeyCountDownExternal(keyCountDown)
             setFinish(false)
-                        
             setCountMsDown((statePrev) => {
-                if(run && statePrev > (msfinishCountDown.current as number)){
+
+                if(pausePause) {
+                    const savePause = {time: countMsDown - Number(localStorage.getItem(keyCountDownExternal)) + seconds }
+                    localStorage.setItem(`${keyCountDownExternal}-pause`, JSON.stringify(savePause))
+                    setKeyCountDownExternal(state => `${state}-pause`)
+                    setRun(false)
+                    localStorage.removeItem(keyCountDownExternal)
+                    clearInterval(interval)
+                }
+                
+                if(!run ||  statePrev <= (msfinishCountDown.current as number)){   
+                    setRun(false)
+                    setFinish(true)
+                    clearInterval(interval)
+                    return statePrev
+                }
+                 
                 return statePrev - 1000
-            } else{
-                setRun(false)
-                setFinish(true)
-                clearInterval(interval)
-                return statePrev
-            }})
+            }
+        )
             
         },1000)
 
         return ()=> clearInterval(interval)
 
-    },[seconds, run])
+    },[seconds, run, pausePause])
 
     const formatDate = localStorage.getItem(keyCountDownExternal)
     ? formatMs({secondsCoundStartValue:seconds, miliseconds:countMsDown, msfinishCountDown: Number(localStorage.getItem(keyCountDownExternal))}) 
     : formatMs({miliseconds:seconds * 1000})
     
-    return {formatDate, countMsDown, finish , setRun}
+    return {formatDate, countMsDown, finish , setRun, setPausePomo}
 }
