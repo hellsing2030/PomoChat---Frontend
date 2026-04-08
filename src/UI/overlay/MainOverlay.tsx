@@ -1,9 +1,13 @@
+
+import { CountDownPomo } from "../../components/CountDownPomo"
 import "./Overlay.css"
 
 export const MainOverlay = () => {
   return (
     <div className="container-main">
-        <span className="container-overlay-left"/>
+        <div className="container-overlay-left">
+          <CountDownPomo/>
+        </div>
         <div className="container-view-video-top-bottom">
           <span className="container-overlay-top"/>
           <div className="cam-overlay">

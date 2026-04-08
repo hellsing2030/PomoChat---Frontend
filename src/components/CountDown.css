@@ -1,0 +1,36 @@
+@import url("../general-css.css");
+
+
+.container-countdown{
+    padding: 20px;
+    border-radius: 5px;
+    margin: 20px;
+    border:2px solid rgba(255, 255, 255, 0.5);
+}
+
+.countdown{
+    width: 100%;
+    height: auto;    
+    display: flex;  
+    flex-direction: column;
+}
+.countPomo span{
+    width: 100%;
+    height: auto;    
+    display: flex;  
+    flex-direction: column;
+    font-family: "Delius";
+    font-size: 2rem;
+    color: rgb(255, 255, 255);    
+    text-align: center;
+}
+
+#clock{
+    font-family: "Delius";
+    font-size: 3rem;
+    max-width: 400px;
+    max-height: 400px;    
+    overflow: hidden;
+    text-align: center;
+    color: rgb(255, 255, 255);
+}

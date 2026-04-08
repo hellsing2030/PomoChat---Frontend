@@ -3,11 +3,11 @@
     width: 100%;
     height: 100%;
     flex-wrap: nowrap;
-    background: rgba(39, 39, 39, 0.829);
+    background: rgb(67 67 67);
 }
 
 .container-overlay-left {
-    width: 20%;
+    width: 30%;
     background: rgb(36, 36, 36);
 }
 .container-overlay-right{
