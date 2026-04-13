@@ -41,7 +41,7 @@ export const CountDownPomo = () => {
           </span>
       </div>
       <div className='countPomo'>
-        <span>Pomodoro: {pomo}/{finishPomo}</span>
+        <span>{stateTimer === "working"? "Pomodoro":"Descanso"}: {pomo}/{finishPomo}</span>
       </div>
       <div className='countdown'>
         {
