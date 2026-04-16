@@ -6,25 +6,29 @@ import { AudioContextClock } from '../hooks/audioContext'
 export const CountDownPomo = () => {
   const initialValuePomo = { pomo:1, finishPomo:8}
   const [ stateTimer, setStateTimer ] = useState<"working"|"rest">("working")
-  const { formatDate, setRun, finish, setPausePomo }= useSetCountDown({ seconds: stateTimer === "working"?10:4})
+  const [ resetKey, setResetKey ] = useState(0)
+  const { formatDate, setRun, finish } = useSetCountDown({
+    seconds: stateTimer === "working" ? 10 : 4,
+    resetKey,
+  })
   const [ generalRunTimer, setGeneralRunTimer ]=useState<boolean>(false)
   const [{ finishPomo, pomo }, setCountPomo ]=useState(initialValuePomo)
     
     const handlerRunCount = (stateRun:boolean)=>{   
        setGeneralRunTimer(stateRun)
        setRun(stateRun)
-       setPausePomo(stateRun => stateRun ? !stateRun: stateRun)
     }
     
     const handlerPauseCount = () =>{
       setGeneralRunTimer(false)
-      setPausePomo(true)
+      setRun(false)
     }
 
     const reset  =()=>{
       handlerRunCount(false)
       setStateTimer("working")
       setCountPomo((state) => ({...state, pomo:1}))
+      setResetKey((k) => k + 1)
     }
 
     useEffect(()=>{
