@@ -1,51 +1,42 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { formatMs } from "./formatMs"
 
-export const  useSetCountDown =({ seconds, }:{seconds:number,})=>{
-    const msStartDate = useRef<number | null>(null) 
-    const msfinishCountDown = useRef<number | null>(null) 
+type UseSetCountDownOpts = {
+  seconds: number
+  /** Al incrementarlo se reinicia la cuenta al valor de `seconds` (p. ej. botón RESET). */
+  resetKey: number
+}
 
-    const [countMsDown, setCountMsDown] = useState<number>(0)
-    const [run, setRun]= useState<boolean>(false) 
-    const [finish,setFinish]= useState<boolean>(false)
-    const [keyCountDownExternal,setKeyCountDownExternal]= useState<string>("")
+export const useSetCountDown = ({ seconds, resetKey }: UseSetCountDownOpts) => {
+  const [remainingMs, setRemainingMs] = useState(() => seconds * 1000)
+  const [run, setRun] = useState(false)
+  const [finish, setFinish] = useState(false)
 
-    useEffect(()=>{
-          if(!run){
-            setKeyCountDownExternal("")
-            localStorage.removeItem(keyCountDownExternal)
-            return
+  // Primero: al cambiar fase o reset externo, volver a la duración completa
+  useEffect(() => {
+    setRemainingMs(seconds * 1000)
+    setFinish(false)
+  }, [seconds, resetKey])
+
+  // Segundo: tick solo mientras run === true (pausa conserva remainingMs)
+  useEffect(() => {
+    if (!run) return
+
+    const id = setInterval(() => {
+      setRemainingMs((prev) => {
+        if (prev <= 1000) {
+          setRun(false)
+          setFinish(true)
+          return 0
         }
+        return prev - 1000
+      })
+    }, 1000)
 
-        msStartDate.current = Date.now()
-        msfinishCountDown.current = msStartDate.current - seconds  * 1000  
-        setCountMsDown(msStartDate.current)
+    return () => clearInterval(id)
+  }, [run])
 
-        const interval = setInterval(()=>{
-            const keyCountDown = `CountDown-${msStartDate.current}`
-            localStorage.setItem(keyCountDown, (msStartDate.current as number).toString())
-            setKeyCountDownExternal(keyCountDown)
-            setFinish(false)
-                        
-            setCountMsDown((statePrev) => {
-                if(run && statePrev > (msfinishCountDown.current as number)){
-                return statePrev - 1000
-            } else{
-                setRun(false)
-                setFinish(true)
-                clearInterval(interval)
-                return statePrev
-            }})
-            
-        },1000)
+  const formatDate = formatMs({ miliseconds: remainingMs })
 
-        return ()=> clearInterval(interval)
-
-    },[seconds, run])
-
-    const formatDate = localStorage.getItem(keyCountDownExternal)
-    ? formatMs({secondsCoundStartValue:seconds, miliseconds:countMsDown, msfinishCountDown: Number(localStorage.getItem(keyCountDownExternal))}) 
-    : formatMs({miliseconds:seconds * 1000})
-    
-    return {formatDate, countMsDown, finish , setRun}
+  return { formatDate, remainingMs, finish, setRun }
 }
