@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useSetCountDown } from '../hooks/setCountDownMs'
 import './CountDown.css'
+import { AudioContextClock } from '../hooks/audioContext'
 
 export const CountDownPomo = () => {
   const initialValuePomo = { pomo:1, finishPomo:8}
@@ -29,13 +30,14 @@ export const CountDownPomo = () => {
     useEffect(()=>{
       if( !finish||!generalRunTimer)return
       const valid = pomo >= finishPomo && stateTimer !== "rest"
-      console.log({valid})
+
       if(valid){
         handlerRunCount(false)
         return
       }
       setStateTimer(state => state === "working"? "rest":"working")
       setCountPomo(state => stateTimer === "working" ? {...state, pomo: state.pomo + 1 }:{...state})
+      AudioContextClock()
       setRun(true)
     },[finish , generalRunTimer])
     
@@ -48,7 +50,7 @@ export const CountDownPomo = () => {
           </span>
       </div>
       <div className='countPomo'>
-        <span>Pomodoro: {pomo}/{finishPomo}</span>
+        <span>{stateTimer === "working"? "Pomodoro":"Descanso"}: {pomo}/{finishPomo}</span>
       </div>
       <div className='countdown'>
         {
