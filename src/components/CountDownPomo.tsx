@@ -5,7 +5,7 @@ import './CountDown.css'
 
 
 export const CountDownPomo = () => {
-  const initialValuePomo = { pomo:1, finishPomo:4}
+  const initialValuePomo = { pomo:1, finishPomo:8}
   const [ stateTimer, setStateTimer ] = useState<"working"|"rest">("working")
   const [, setOpenConfig]= useState<boolean>(false)
   const [ resetKey, setResetKey ] = useState(0)
